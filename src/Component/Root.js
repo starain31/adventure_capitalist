@@ -13,9 +13,8 @@ export function Root() {
         fetch("http://localhost:3001/state").then(resp => resp.json()).then(({capital, businesses}) => {
             setCapitalState(capital);
             setBusinessState(businesses);
-
-        })
-    });
+        }, )
+    }, [setBusinessState, setCapitalState]);
 
     return <div className="App">
         <header className="App-header">

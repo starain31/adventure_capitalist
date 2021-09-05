@@ -3,33 +3,56 @@ import {businessState, capitalState, isBusinessOwnedState} from "../../store/sto
 import styles from "./Business.module.css";
 
 
-
 export function Business({business}) {
     const [capital, setCapital] = useRecoilState(capitalState);
     const isBusinessOwned = useRecoilValue(isBusinessOwnedState(business.name));
-    const [businessesState, setBusinessesState] = useRecoilState(businessState);
+    const [businesses, setBusinesses] = useRecoilState(businessState);
 
     function makeProfit() {
-        setTimeout(function () {
-            setCapital(capital + (business.profitPerBusiness*business.quantity));
-        }, business.timeToProfit * 1000)
+        fetch("http://localhost:3001/makeprofit", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                businessName: business.name
+            })
+        })
+            .then(response => response.json())
+            .then(({capital, businesses}) => {
+                setCapital(capital);
+            })
+            .catch(function (e) {
+                console.error(e);
+            });
     }
 
     function buyBusiness() {
-        if(business.buyingCost <= capital) {
-            setBusinessesState(businessesState.map((businessState) => {
-                return businessState.name === business.name ? {
-                    ...businessState,
-                    quantity: businessState.quantity + 1
-                } : businessState;
-            }));
-            setCapital(capital-business.buyingCost);
+        if (business.buyingCost <= capital) {
+            fetch("http://localhost:3001/buybusiness", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    businessName: business.name
+                })
+            })
+                .then(response => response.json())
+                .then(({businesses, capital}) => {
+                    setBusinesses(businesses);
+                    setCapital(capital);
+                })
+                .catch(function (e) {
+                    console.error(e);
+                });
+
         }
     }
 
     return <div>
         <div className={styles.logo}>
-            <img style={{ borderRadius: "50%", height: "10vmin"}} src={business.image} alt={business.name}/>
+            <img style={{borderRadius: "50%", height: "10vmin"}} src={business.image} alt={business.name}/>
         </div>
         <div className={styles.button}>
             QUANTITY: {business.quantity}
@@ -37,9 +60,9 @@ export function Business({business}) {
         <div
             onClick={makeProfit}
             className={styles.asyncButton}
-            style={{transition: isBusinessOwned?`width ${business.timeToProfit}s linear, opacity 0.5s ease ${business.timeToProfit}s`:""}}
+            style={{transition: isBusinessOwned ? `width ${business.timeToProfit}s linear, opacity 0.5s ease ${business.timeToProfit}s` : ""}}
         >
-            EARN: { business.profitPerBusiness* business.quantity}
+            EARN: {business.profitPerBusiness * business.quantity}
         </div>
         <div className={styles.button}
              onClick={buyBusiness}
