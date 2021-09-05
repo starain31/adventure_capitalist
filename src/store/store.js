@@ -1,18 +1,18 @@
-import {atom} from "recoil";
+import {atom, selectorFamily} from "recoil";
 
 export const capitalState = atom({
     key: 'capitalState',
     default: 0,
 });
+
 export const businessState = atom({
     key: 'businessState',
-    default: [{
-        name: 'lemonade',
-        timeToProfit: 3,
-        profitPerBusiness: 100
-    }, {
-        name: 'news-paper',
-        timeToProfit: 10,
-        profitPerBusiness: 1000
-    }]
+    default: []
 });
+
+export const isBusinessOwnedState = selectorFamily({
+    key: "isBusinessOwned",
+    get: (name) => ({get}) => {
+        return get(businessState).find((business) => business.name === name).quantity !== 0;
+    }
+})
