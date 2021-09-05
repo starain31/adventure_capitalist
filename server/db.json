@@ -1,0 +1,37 @@
+{
+  "capital": 0,
+  "businesses": [
+    {
+      "name": "lemonade",
+      "time_to_profit": 1,
+      "profit_per_business": 1,
+      "buyingCost": 4,
+      "quantity": 1,
+      "image": "./logo/business/lemonade.svg"
+    },
+    {
+      "name": "news-paper",
+      "time_to_profit": 5,
+      "profit_per_business": 60,
+      "buyingCost": 60,
+      "quantity": 0,
+      "image": "./logo/business/newspaper.svg"
+    },
+    {
+      "name": "car-wash",
+      "time_to_profit": 10,
+      "profit_per_business": 150,
+      "buyingCost": 150,
+      "quantity": 0,
+      "image": "./logo/business/car-wash.png"
+    },
+    {
+      "name": "pizza-delivery",
+      "time_to_profit": 15,
+      "profit_per_business": 300,
+      "buyingCost": 300,
+      "quantity": 0,
+      "image": "./logo/business/pizza-delivery.png"
+    }
+  ]
+}

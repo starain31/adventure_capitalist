@@ -6,75 +6,62 @@ const cors = require('cors');
 app.use(cors());
 app.use(express.json());
 
-let state = {
-    capital: 0,
-    businesses: [{
-        name: 'lemonade',
-        timeToProfit: 1,
-        profitPerBusiness: 1,
-        buyingCost: 4,
-        quantity: 1,
-        image: "./logo/business/lemonade.jpeg"
-    }, {
-        name: 'news-paper',
-        timeToProfit: 5,
-        profitPerBusiness: 60,
-        buyingCost: 60,
-        quantity: 0,
-        image: "./logo/business/news-paper.jpeg"
-    }]
-}
+let state = require('./db.json');
 
-function makeProfit({state, businessName}) {
+function make_profit({state, business_name}) {
     return {
         ...state,
-        capital: state.capital + profit({business: state.businesses.find(b => b.name === businessName)})
+        capital: state.capital + profit({business: state.businesses.find(b => b.name === business_name)})
     }
 }
 
 function profit({business}) {
-    return business.quantity * business.profitPerBusiness;
+    return business.quantity * business.profit_per_business;
 }
 
-function buybueiness({state, businessName}) {
-    const businessToBuy = state.businesses.find(b=>b.name === businessName);
-    if(businessToBuy && businessToBuy.buyingCost <= state.capital) {
-        return {
-            capital: state.capital - businessToBuy.buyingCost,
-            businesses: state.buybueiness.map(b => {
+function find_business({businesses, business_name}) {
+    return businesses.find(b=>b.name === business_name);
+}
 
+function is_eligible_to_buy({business_to_buy, capital}) {
+    return business_to_buy && business_to_buy.buyingCost <= capital;
+}
+
+function buy_business({state, business_name}) {
+    const business_to_buy = find_business({businesses: state.businesses, business_name});
+
+    if(is_eligible_to_buy({business_to_buy, capital: state.capital})) {
+        return {
+            capital: state.capital - business_to_buy.buyingCost,
+            businesses: state.businesses.map(b => {
+                return b.name === business_name? {
+                    ...b,
+                    quantity: b.quantity + 1
+                } : b;
             })
         }
     }
-    return {
-        ...state,
-        businesses: state.businesses.map()
-    }
+    return state;
 }
-
 
 app.get('/state', (req, res) => {
     res.json(state);
 });
 
-app.post('/makeprofit', (req, res) => {
+app.post('/make_profit', (req, res) => {
+    const business_name = req.body.business_name;
+
     setTimeout(function () {
-        state = makeProfit({state, businessName: req.body.businessName});
-        console.log(JSON.stringify({state}, null, '\t'));
+        state = make_profit({state, business_name});
         res.json({capital: state.capital});
-    }, state.businesses.find(b => b.name === req.body.businessName).timeToProfit * 1000);
+    }, find_business({businesses: state.businesses, business_name}).time_to_profit * 1000);
 });
 
-app.post('/buybusiness', (req, res) => {
-    businesses.map((businessState) => {
-        return businessState.name === business.name ? {
-            ...businessState,
-            quantity: businessState.quantity + 1
-        } : businessState;
-    }));
-    setCapital(capital - business.buyingCost);
+app.post('/buy_business', (req, res) => {
+    state = buy_business({state, business_name: req.body.business_name});
+    res.json(state);
 });
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
+    console.log(`Adventure capitalist backend listening at http://localhost:${port}`)
 })
