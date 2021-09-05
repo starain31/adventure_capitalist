@@ -44,6 +44,28 @@ function buy_business({state, business_name}) {
     return state;
 }
 
+function is_eligible_to_buy_manager({business_of_manager_to_buy, capital}) {
+    return business_of_manager_to_buy &&
+        !business_of_manager_to_buy.has_manager &&
+        business_of_manager_to_buy.manager_buying_cost <= capital;
+}
+
+function buy_manager({state, business_name}) {
+    const business_of_manager_to_buy = find_business({businesses: state.businesses, business_name});
+    if(is_eligible_to_buy_manager({business_of_manager_to_buy, capital: state.capital})) {
+        return {
+            capital: state.capital - business_of_manager_to_buy.manager_buying_cost,
+            businesses: state.businesses.map(b => {
+                return b.name === business_name? {
+                    ...b,
+                    has_manager: true
+                } : b;
+            })
+        }
+    }
+    return state;
+}
+
 app.get('/state', (req, res) => {
     res.json(state);
 });
@@ -59,6 +81,13 @@ app.post('/make_profit', (req, res) => {
 
 app.post('/buy_business', (req, res) => {
     state = buy_business({state, business_name: req.body.business_name});
+    res.json(state);
+});
+
+app.post('/buy_manager', (req, res) => {
+   state = buy_manager({state, business_name: req.body.business_name});
+    console.log(state);
+
     res.json(state);
 });
 

@@ -7,6 +7,8 @@
       "profit_per_business": 1,
       "buyingCost": 4,
       "quantity": 1,
+      "has_manager": false,
+      "manager_buying_cost": 100,
       "image": "./logo/business/lemonade.svg"
     },
     {
@@ -15,6 +17,8 @@
       "profit_per_business": 60,
       "buyingCost": 60,
       "quantity": 0,
+      "has_manager": false,
+      "manager_buying_cost": 200,
       "image": "./logo/business/newspaper.svg"
     },
     {
@@ -23,6 +27,8 @@
       "profit_per_business": 150,
       "buyingCost": 150,
       "quantity": 0,
+      "has_manager": false,
+      "manager_buying_cost": 500,
       "image": "./logo/business/car-wash.png"
     },
     {
@@ -31,6 +37,8 @@
       "profit_per_business": 300,
       "buyingCost": 300,
       "quantity": 0,
+      "has_manager": false,
+      "manager_buying_cost": 1000,
       "image": "./logo/business/pizza-delivery.png"
     }
   ]

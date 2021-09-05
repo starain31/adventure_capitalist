@@ -50,6 +50,26 @@ export function Business({business}) {
         }
     }
 
+    function buy_manager() {
+        fetch("http://localhost:3001/buy_manager", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                business_name: business.name
+            })
+        })
+            .then(response => response.json())
+            .then(({capital, businesses}) => {
+                setCapital(capital);
+                setBusinesses(businesses);
+            })
+            .catch(function (e) {
+                console.error(e);
+            });
+    }
+
     return <div>
         <div className={styles.logo}>
             <img style={{borderRadius: "50%", height: "10vmin"}} src={business.image} alt={business.name}/>
@@ -72,5 +92,14 @@ export function Business({business}) {
         >
             BUY x 1 for ${business.buyingCost}
         </div>
+        {
+            !business.has_manager &&
+            <div
+                className={styles.button}
+                onClick={buy_manager}
+            >
+                BUY MANAGER
+            </div>
+        }
     </div>
 }
