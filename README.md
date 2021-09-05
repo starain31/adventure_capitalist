@@ -1,14 +1,14 @@
 # Adventure capitalist clone
 
 ## Install
-`yarn`
-`cd server`
-`yarn`
-`cd ..`
+1. `yarn` 
+2. `cd server`
+3. `yarn`
+4. `cd ..`
 
 ## Run
-`yarn start`
-Goto `localhost:3000`
+1. `yarn start`
+2. Goto `localhost:3000`
 
 ## Feature implemented
 1. Buy businesses. There should be several business types to choose from.
